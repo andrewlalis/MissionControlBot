@@ -29,7 +29,7 @@ public class UpcomingLaunchesCommand implements Command {
 						spec.setFooter("Data by RocketLaunch.Live", "https://www.rocketlaunch.live/res/favicon32.png");
 						spec.setColor(Color.ENDEAVOUR);
 						spec.setTitle("Upcoming Launches");
-						spec.setThumbnail();
+						spec.setThumbnail("https://raw.githubusercontent.com/andrewlalis/MissionControlBot/main/design/icon.png");
 						paged.getResult().forEach(launchResponse -> {
 							spec.addField(launchResponse.getName(), launchResponse.getLaunchDescription(), false);
 						});
