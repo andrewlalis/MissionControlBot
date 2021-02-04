@@ -3,8 +3,10 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.lifecycle.ReadyEvent;
 import discord4j.core.object.entity.User;
+import discord4j.discordjson.json.gateway.ImmutableStatusUpdate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import subscriber.CommandManager;
 import subscriber.MessageHandler;
 import subscriber.commands.HelpCommand;
@@ -43,10 +45,12 @@ public class MissionControlBot {
 	 */
 	private static void registerEventHandlers(GatewayDiscordClient client) {
 		client.getEventDispatcher().on(ReadyEvent.class)
-				.subscribe(event -> {
-					User self = event.getSelf();
+				.flatMap(event -> client.updatePresence(ImmutableStatusUpdate.builder().status("!mc help").since(System.currentTimeMillis()).afk(false).build()))
+				.flatMap(f -> client.getSelf().flatMap(self -> {
 					log.info("Logged in as {}#{}.", self.getUsername(), self.getDiscriminator());
-				});
+					return Mono.empty();
+				}))
+				.subscribe();
 		CommandManager commandManager = new CommandManager();
 		commandManager.registerCommand("help", new HelpCommand());
 		commandManager.registerCommand("launches", new UpcomingLaunchesCommand());

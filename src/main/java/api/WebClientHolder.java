@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientHolder {
 	private static WebClient client;
 
-	public static WebClient get() {
+	public static WebClient getClient() {
 		if (client == null) {
 			throw new RuntimeException("WebClient not initialized.");
 		}
